@@ -90,5 +90,16 @@ public class ScheduleController {
         return ResponseEntity.status(ResponseMessage.SUCCESS_UPDATE.getStatus())
                 .body(ApiResponse.success(ResponseMessage.SUCCESS_UPDATE.getMessage(), result));
     }
+
+    // 일정 삭제 //
+    @DeleteMapping("/schedules/{scheduleId}")
+    public ResponseEntity<ApiResponse<Void>> deleteSchedule(
+            @PathVariable Long scheduleId
+    ) {
+        scheduleService.deleteSchedule(scheduleId);
+
+        return ResponseEntity.status(ResponseMessage.SUCCESS_DELETE.getStatus())
+                .body(ApiResponse.success(ResponseMessage.SUCCESS_DELETE.getMessage(), null));
+    }
 }
 

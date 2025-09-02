@@ -153,4 +153,17 @@ public class ScheduleService {
                 schedule.getUpdatedAt()
         );
     }
+
+    // 일정 삭제 //
+    @Transactional
+    public void deleteSchedule(Long scheduleId) {
+
+        // 1. DB 에서 기존 엔티티 조회
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new IllegalArgumentException()
+        );
+
+        // 2. 삭제
+        scheduleRepository.delete(schedule);
+    }
 }
