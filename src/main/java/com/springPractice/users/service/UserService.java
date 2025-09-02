@@ -105,4 +105,17 @@ public class UserService {
                 user.getUpdatedAt()
         );
     }
+
+    // 일정 삭제
+    @Transactional
+    public void deleteUser(Long userId) {
+
+        // 1. DB 에서 기본 엔티티 조회
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 유저가 없습니다.")
+        );
+
+        // 2. 삭제
+        userRepository.delete(user);
+    }
 }

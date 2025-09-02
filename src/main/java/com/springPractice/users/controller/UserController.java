@@ -62,4 +62,16 @@ public class UserController {
         return ResponseEntity.status(ResponseMessage.SUCCESS_UPDATE.getStatus())
                 .body(ApiResponse.success(ResponseMessage.SUCCESS_UPDATE.getMessage(), result));
     }
+
+    // 유저 삭제 //
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<ApiResponse<UserResponse>> deleteUser(
+            @PathVariable Long userId
+    ) {
+        userService.deleteUser(userId);
+
+        return ResponseEntity.status(ResponseMessage.SUCCESS_DELETE.getStatus())
+                .body(ApiResponse.success(ResponseMessage.SUCCESS_DELETE.getMessage(), null));
+    }
+
 }
