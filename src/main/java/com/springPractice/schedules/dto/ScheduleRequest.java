@@ -10,6 +10,5 @@ public class ScheduleRequest {
     @NotNull
     @Size(max = 100)
     private String title;
-
     private String content;
 }

@@ -29,6 +29,7 @@ public class Schedule extends BaseEntity {
         this.title = title;
         this.content = content;
     }
+
 }
 
 /*

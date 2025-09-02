@@ -8,33 +8,64 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Locale;
+import java.util.List;
+import java.util.Optional;
 
 @Service
+// 서비스 임을 명시
 @RequiredArgsConstructor
+// final , @NonNull 이 붙은 매개변수가 있는 생성자를 자동 생성
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    // @RequiredArgsConstructor 이거 없으면 아래처럼 생성자 정의 필요
+    //   public ScheduleService(ScheduleRepository scheduleRepository) {
+    //       this.scheduleRepository = scheduleRepository;
+    //   }
 
     // 일정 생성 //
     @Transactional
-    public ScheduleResponse createSchedule(ScheduleRequest scheduleRequest) {
+    // 작업을 한 단위로 묶어주는 역할
+    // 한 단위가 모두 성공되면 실행되고, 하나라도 안되면 롤백
+    // 실패임에도 중간에 하나가 진행되는것을 방지 (원자성)
+     public ScheduleResponse createSchedule(ScheduleRequest scheduleRequest) {
 
+        // " 엔티티 객체 생성 " : 요청 데이터 저장
         Schedule schedule = new Schedule(
+        // 엔티티 객체 생성 -> title, content 값 세팅  => DB 저장X
+        // 요청내용을 schedule 에 저장
                 scheduleRequest.getTitle(),
                 scheduleRequest.getContent()
         );
 
+        // " 엔티티 저장 " : 요청 데이터 + DB 자동 생성된 데이터
         Schedule savedSchedule = scheduleRepository.save(schedule);
+        /* - scheduleRepository가 jpa 상속 -> 기본 제공되는 save() 메서드 사용 가능
+           - save 메서드 호출 (요청내용 전달) -> DB 에서 insert 쿼리 실행
+           - 이 때 전달된 엔티티(schedule)에는 title, content 값만 있고, 나머지는 null
+              -> id, createdAt, updatedAt 는 엔티티에 붙은 어노테이션 덕분에 자동생성됨
+           - DB 저장 후, id, createdAt, updatedAt 자동생성된 값이 엔티티에 반영
+           - 반환값(savedSchedule)에는 요청 데이터(title, content) + DB 에서 자동생성된 값 모두 담김
+         */
 
         return new ScheduleResponse(
+        // [엔티티] -> [DTO] 변환
+        /*    1. 내부 구조 노출 위험 감소
+                  - 엔티티는 DB 구조와 직접 연결 -> 그대로 반환 시 보안/유지보수 문제 발생
+              2. 외부 응답 전용 객체로 사용
+              3. 엔티티와 분리
+                  - 엔티티 변경 있어도 API 응답 안정적으로 유지 가능
+              4. 명확한 의도 표현
+                  - DTO 클래스 이름 설정 가능
+         */
+        // 새로운 DTO 객체 생성하여 반환 (응답용)
+        // 반환값이 저장된 savedSchedule 요소들 모두 반환
                 savedSchedule.getId(),
                 savedSchedule.getTitle(),
                 savedSchedule.getContent(),
                 savedSchedule.getCreatedAt(),
                 savedSchedule.getUpdatedAt()
         );
-
     }
 
 }
