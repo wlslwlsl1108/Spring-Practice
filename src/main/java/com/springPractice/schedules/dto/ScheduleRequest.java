@@ -1,6 +1,6 @@
 package com.springPractice.schedules.dto;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ScheduleRequest {
 
-    @NotNull
-    @Size(max = 100)
+    @NotBlank(message = "제목은 필수 입력 값입니다.")
+    @Size(max = 100, message = "100자까지 입력 가능합니다.")
     private final String title;
     private final String content;
     // DTO는 요청 시에는 그릇처럼 담는 역할 ,
