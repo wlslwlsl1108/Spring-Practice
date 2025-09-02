@@ -78,5 +78,17 @@ public class ScheduleController {
         return ResponseEntity.status(ResponseMessage.SUCCESS_READ.getStatus())
                 .body(ApiResponse.success(ResponseMessage.SUCCESS_READ.getMessage(), result));
     }
+
+    // 일정 수정 //
+    @PutMapping("/schedules/{scheduleId}")
+    public ResponseEntity<ApiResponse<ScheduleResponse>> updateSchedule(
+            @Valid @RequestBody ScheduleRequest scheduleRequest,
+            @PathVariable Long scheduleId
+    ) {
+        ScheduleResponse result = scheduleService.updateSchedule(scheduleId, scheduleRequest);
+
+        return ResponseEntity.status(ResponseMessage.SUCCESS_UPDATE.getStatus())
+                .body(ApiResponse.success(ResponseMessage.SUCCESS_UPDATE.getMessage(), result));
+    }
 }
 

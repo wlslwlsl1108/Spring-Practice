@@ -25,7 +25,15 @@ public class Schedule extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)   // user_id 라는 외래키 생성
     private User user;                                // user 엔티티 참조
     user 생성 후 추가 예정*/
+
+    // 생성자 정의 //
     public Schedule(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    // 일정 수정 //
+    public void updateSchedule(String title, String content) {
         this.title = title;
         this.content = content;
     }

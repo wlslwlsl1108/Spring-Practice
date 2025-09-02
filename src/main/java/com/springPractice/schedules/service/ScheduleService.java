@@ -119,7 +119,6 @@ public class ScheduleService {
                 schedule.getUpdatedAt()
         );
     }
-
     /*   [ orElseThrow 미작성 시 오류 나는 이유 ]
             - findById()  => Optional<T> findById(Id id)
               즉, 반환 타입이 Optional<Schedule> 이므로 Schedule 변환 필요 (변환 안하면 컴파일 오류 발생)
@@ -129,4 +128,29 @@ public class ScheduleService {
                   Schedule schedule = scheduleRepository.findById(scheduleId)
                      .orElse(new Schedule());
      */
+
+    // 일정 수정 //
+    @Transactional
+    public ScheduleResponse updateSchedule(Long scheduleId, ScheduleRequest scheduleRequest) {
+
+        // 1. DB 에서 기존 엔티티 조회
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 일정이 없습니다.")
+        );
+
+        // 2. 수정 데이터 저장
+        // -> Schedule 엔티티에 메서드 정의
+        schedule.updateSchedule(
+                scheduleRequest.getTitle(),
+                scheduleRequest.getContent());
+
+        // 3. DTO로 변환하여 반환
+        return new ScheduleResponse(
+                schedule.getId(),
+                schedule.getTitle(),
+                schedule.getContent(),
+                schedule.getCreatedAt(),
+                schedule.getUpdatedAt()
+        );
+    }
 }
