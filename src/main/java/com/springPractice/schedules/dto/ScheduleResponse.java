@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)    // NULL인 필드는 응답에서 제외(생략)
 public class ScheduleResponse {
 
-    private final Long id;
+    private final Long scheduleId;
     private final String title;
     private final String content;
     private final LocalDateTime createdAt;

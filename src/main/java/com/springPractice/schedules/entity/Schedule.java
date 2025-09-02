@@ -1,7 +1,6 @@
 package com.springPractice.schedules.entity;
 
 import com.springPractice.common.entity.BaseEntity;
-import com.springPractice.users.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

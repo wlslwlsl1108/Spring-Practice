@@ -4,18 +4,12 @@ import com.springPractice.common.ResponseMessage;
 import com.springPractice.common.dto.ApiResponse;
 import com.springPractice.schedules.dto.ScheduleRequest;
 import com.springPractice.schedules.dto.ScheduleResponse;
-import com.springPractice.schedules.entity.Schedule;
 import com.springPractice.schedules.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.concurrent.ThreadPoolExecutor;
 
 @RestController
 // 컨트롤러 명시 + 응답을 JSON 형태로 반환
