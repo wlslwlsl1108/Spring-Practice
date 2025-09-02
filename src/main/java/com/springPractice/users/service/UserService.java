@@ -1,5 +1,6 @@
 package com.springPractice.users.service;
 
+import com.springPractice.common.config.PasswordEncoder;
 import com.springPractice.users.dto.UserUpdateRequest;
 import com.springPractice.users.dto.UserRequest;
 import com.springPractice.users.dto.UserResponse;
@@ -16,20 +17,28 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 유저 생성 //
     @Transactional
     public UserResponse createUser(UserRequest userRequest) {
 
+        // 비밀번호 인코딩 //
+        String encodePassword = passwordEncoder.encode(userRequest.getPassword());
+        // 평문 비밀번호 -> 인코딩된 문자열 (변환)
+
         //1. 엔티티 객체 생성
         User user = new User(
                 userRequest.getUsername(),
                 userRequest.getEmail(),
-                userRequest.getPassword()
+                encodePassword
+                // 인코딩한 password 값을 User 엔티티의 생성자에 전달
+                // User 엔티티의 password 값이 인코딩값으로 초기화
         );
 
         //2. 엔티티 저장 (DB 저장)
         User savedUser = userRepository.save(user);
+        // DB에 password는 인코딩된 문자열로 저장
 
         //3. dto로 변환
         return new UserResponse(
