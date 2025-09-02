@@ -59,4 +59,22 @@ public class UserService {
                         )
                 ).toList();
     }
+
+    // 유저 단건 조회 //
+    @Transactional(readOnly = true)
+    public UserResponse getUser(Long userId) {
+
+        // 1. 엔티티 저장 (DB 저장)
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 유저가 없습니다.")
+        );
+
+        return new UserResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
+    }
 }
