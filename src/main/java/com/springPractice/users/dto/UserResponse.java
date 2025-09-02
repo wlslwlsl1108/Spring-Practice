@@ -12,6 +12,7 @@ public class UserResponse {
 
     private final Long userId;
     private final String username;
+    private final String email;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 

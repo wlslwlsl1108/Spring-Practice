@@ -19,6 +19,8 @@ public class UserRequest {
     @Email(message = "올바른 이메일 형식이 아닙니다.")
     private final String email;
 
+    private final String password;
+
 }
 /*
      [ @NotNull ]
