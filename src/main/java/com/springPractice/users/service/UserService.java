@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -36,5 +38,25 @@ public class UserService {
                 savedUser.getCreatedAt(),
                 savedUser.getUpdatedAt()
         );
+    }
+
+    // 유저 전체 조회 //
+    @Transactional(readOnly = true)
+    public List<UserResponse> getAllUsers() {
+
+        // 1. 엔티티 저장 (DB 저장)
+        List<User> users = userRepository.findAll();
+
+        // 2. dto로 변환
+        return users.stream()
+                .map(
+                        user -> new UserResponse(
+                                user.getId(),
+                                user.getUsername(),
+                                user.getEmail(),
+                                user.getCreatedAt(),
+                                user.getUpdatedAt()
+                        )
+                ).toList();
     }
 }
