@@ -68,4 +68,36 @@ public class ScheduleService {
         );
     }
 
+    // 일정 전체 조회 //
+    @Transactional(readOnly = true)
+    // (readOnly = true) : "읽기 전용" -> 엔티티 수정해도 DB에 반영 안됨 (변경 감지 비활성화)
+    // INSERT/UPDATE/DELETE 실행 시 = 쿼리 막거나 무시 가능
+    public List<ScheduleResponse> getAllSchedules() {
+
+        List<Schedule> schedules = scheduleRepository.findAll();
+        // 요청데이터가 없기 때문에 엔티티 객체 생성 과정 불필요
+        // DB에 저장되어 있는 일정만 불러오면 됨
+
+        return schedules.stream()
+        // List<Schedule> -> Stream<Schedule> 로 변환
+        // Stream 이용하면 map, filter, collect 같은 함수형 연산 가능
+                .map(
+                // map : "변환" 연산 (Stream API 에서 제공)
+                // Stream의 각 원소를 다른 형태로 하나씩 변환할 때 사용
+                // Stream<Schedule> -> Stream<ScheduleResponse> 변환
+                schedule -> new ScheduleResponse(
+                        schedule.getId(),
+                        schedule.getTitle(),
+                        schedule.getContent(),
+                        schedule.getCreatedAt(),
+                        schedule.getUpdatedAt()
+                        // Schedule 엔티티 객체에서 꺼내온 값
+                        // 즉, 이 값들을 생성자의 인자로 넣어 ScheduleResponse 라는 DTO 객체 생성
+                        // 모든 Schedule 객체마다 ScheduleResponse 새로 만들고
+                )
+        ).toList();
+        // 최종적으로 List<ScheduleResponse> 로 반환
+        // 즉, 엔티티를 DTO로 변환하여 응답
+    }
+
 }

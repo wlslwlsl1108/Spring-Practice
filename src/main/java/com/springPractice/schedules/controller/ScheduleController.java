@@ -54,4 +54,19 @@ public class ScheduleController {
                 // @RestController 덕분에 자동으로 객체가 JSON 으로 응답
 
     }
+
+    // 일정 전체 조회 //
+    @GetMapping("/schedules")
+    public ResponseEntity<ApiResponse<List<ScheduleResponse>>> getAllSchedules(
+    // 전체 일정을 담을 수 있는 List 추가
+    // 조회이기 때문에 요청 데이터가 없어서 @Valid @RequestBody 불필요
+
+    ) {
+        List<ScheduleResponse> result = scheduleService.getAllSchedules();
+
+        return ResponseEntity.status(ResponseMessage.SUCCESS_READ.getStatus())
+                .body(ApiResponse.success(ResponseMessage.SUCCESS_READ.getMessage(), result));
+    }
+
+
 }
