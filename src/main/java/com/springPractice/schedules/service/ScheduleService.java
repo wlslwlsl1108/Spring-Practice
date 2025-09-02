@@ -100,4 +100,33 @@ public class ScheduleService {
         // 즉, 엔티티를 DTO로 변환하여 응답
     }
 
+    // 일정 단건 조회 //
+    @Transactional(readOnly = true)
+    public ScheduleResponse getSchedule(Long scheduleId) {
+
+        // 엔티티 저장소(DB)에서 꺼내온 Schedule 객체를 schedule 변수에 담음
+        // ( scheduleRepository의 findById() 메서드 호출해서 꺼내옴 )
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 일정이 없습니다.")
+        );
+
+        // 엔티티(Schedule) -> DTO(ScheduleResponse)로 변환
+        return new ScheduleResponse(
+                schedule.getId(),
+                schedule.getTitle(),
+                schedule.getContent(),
+                schedule.getCreatedAt(),
+                schedule.getUpdatedAt()
+        );
+    }
+
+    /*   [ orElseThrow 미작성 시 오류 나는 이유 ]
+            - findById()  => Optional<T> findById(Id id)
+              즉, 반환 타입이 Optional<Schedule> 이므로 Schedule 변환 필요 (변환 안하면 컴파일 오류 발생)
+
+              1. 값 없으면 예외 던짐 -> 현재 위 단건 조회에서 사용
+              2. 값 없으면 기본값 사용
+                  Schedule schedule = scheduleRepository.findById(scheduleId)
+                     .orElse(new Schedule());
+     */
 }

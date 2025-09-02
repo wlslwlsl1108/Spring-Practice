@@ -68,5 +68,15 @@ public class ScheduleController {
                 .body(ApiResponse.success(ResponseMessage.SUCCESS_READ.getMessage(), result));
     }
 
+    // 일정 단건 조회 //
+    @GetMapping("/schedules/{scheduleId}")
+    public ResponseEntity<ApiResponse<ScheduleResponse>> getSchedule(
+            @PathVariable Long scheduleId
+    ) {
+        ScheduleResponse result = scheduleService.getSchedule(scheduleId);
 
+        return ResponseEntity.status(ResponseMessage.SUCCESS_READ.getStatus())
+                .body(ApiResponse.success(ResponseMessage.SUCCESS_READ.getMessage(), result));
+    }
 }
+
