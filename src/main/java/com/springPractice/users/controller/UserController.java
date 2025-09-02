@@ -2,6 +2,7 @@ package com.springPractice.users.controller;
 
 import com.springPractice.common.ResponseMessage;
 import com.springPractice.common.dto.ApiResponse;
+import com.springPractice.users.dto.UserUpdateRequest;
 import com.springPractice.users.dto.UserRequest;
 import com.springPractice.users.dto.UserResponse;
 import com.springPractice.users.service.UserService;
@@ -48,5 +49,17 @@ public class UserController {
 
         return ResponseEntity.status(ResponseMessage.SUCCESS_READ.getStatus())
                 .body(ApiResponse.success(ResponseMessage.SUCCESS_READ.getMessage(), result));
+    }
+
+    // 유저 수정 //
+    @PutMapping("/users/{userId}")
+    public ResponseEntity<ApiResponse<UserResponse>> updateUser(
+            @Valid @RequestBody UserUpdateRequest userUpdateRequest,
+            @PathVariable Long userId
+    ) {
+        UserResponse result = userService.updateUser(userId, userUpdateRequest);
+
+        return ResponseEntity.status(ResponseMessage.SUCCESS_UPDATE.getStatus())
+                .body(ApiResponse.success(ResponseMessage.SUCCESS_UPDATE.getMessage(), result));
     }
 }

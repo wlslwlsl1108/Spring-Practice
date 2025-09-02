@@ -1,5 +1,6 @@
 package com.springPractice.users.service;
 
+import com.springPractice.users.dto.UserUpdateRequest;
 import com.springPractice.users.dto.UserRequest;
 import com.springPractice.users.dto.UserResponse;
 import com.springPractice.users.entity.User;
@@ -69,6 +70,33 @@ public class UserService {
                 () -> new IllegalArgumentException("해당하는 유저가 없습니다.")
         );
 
+        return new UserResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
+    }
+
+    // 유저 수정 //
+    @Transactional
+    public UserResponse updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
+
+        // 1. DB 에서 기본 엔티티 조회
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 유저가 없습니다.")
+        );
+
+        // 2. 수정 데이터 저장
+        // userRequest 에서 수정 데이터를 getter 로 꺼내오고,
+        // 엔티티의 updateUser 메서드를 통해 기존 username을 전달 받은 데이터로 변경
+        // => user 엔티티에 변경된 데이터가 저장
+        user.updateUser(
+                userUpdateRequest.getUsername()
+        );
+
+        // 3. dto로 변환/반환
         return new UserResponse(
                 user.getId(),
                 user.getUsername(),
