@@ -4,6 +4,8 @@ import com.springPractice.schedules.dto.ScheduleRequest;
 import com.springPractice.schedules.dto.ScheduleResponse;
 import com.springPractice.schedules.entity.Schedule;
 import com.springPractice.schedules.repository.ScheduleRepository;
+import com.springPractice.users.entity.User;
+import com.springPractice.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,19 +23,27 @@ public class ScheduleService {
     //       this.scheduleRepository = scheduleRepository;
     //   }
 
+    private final UserRepository userRepository;
+    // 유저 매핑 후 추가
+
     // 일정 생성 //
     @Transactional
     // 작업을 한 단위로 묶어주는 역할
     // 한 단위가 모두 성공되면 실행되고, 하나라도 안되면 롤백
     // 실패임에도 중간에 하나가 진행되는것을 방지 (원자성)
-     public ScheduleResponse createSchedule(ScheduleRequest scheduleRequest) {
+     public ScheduleResponse createSchedule(ScheduleRequest scheduleRequest, Long userId) {
+        // userId 조회
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 유저가 없습니다.")
+        );
 
         // " 엔티티 객체 생성 " : 요청 데이터 저장
         Schedule schedule = new Schedule(
         // 엔티티 객체 생성 -> title, content 값 세팅  => DB 저장X
         // 요청내용을 schedule 에 저장
                 scheduleRequest.getTitle(),
-                scheduleRequest.getContent()
+                scheduleRequest.getContent(),
+                user
         );
 
         // " 엔티티 저장 " : 요청 데이터 + DB 자동 생성된 데이터

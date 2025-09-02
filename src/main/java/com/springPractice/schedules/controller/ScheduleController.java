@@ -5,6 +5,7 @@ import com.springPractice.common.dto.ApiResponse;
 import com.springPractice.schedules.dto.ScheduleRequest;
 import com.springPractice.schedules.dto.ScheduleResponse;
 import com.springPractice.schedules.service.ScheduleService;
+import com.springPractice.users.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,19 +24,23 @@ public class ScheduleController {
     //  public ScheduleController(ScheduleService scheduleService) {
     //    this.scheduleService = scheduleService;
     //  }
+    private final UserService userService;
+    // 유저 관계 매핑 후 추가
 
     // 일정 생성 //
-    @PostMapping("/schedules")
+    @PostMapping("users/{userId}/schedules")
     public ResponseEntity<ApiResponse<ScheduleResponse>> createSchedule(
     // 1. ResponseEntity : 상태코드 지정 가능 (안쓰면 200ok 만 응답 가능), 헤더/바디 전체 제어 가능
     // 2. 공통응답 형식 위해 제네릭 타입 사용 -> ApiResponse : 공통 응답 형식
     //                                   -> ScheduleResponse : 실제 응답 데이터
-            @Valid @RequestBody ScheduleRequest scheduleRequest
+            @Valid @RequestBody ScheduleRequest scheduleRequest,
             // @Valid : dto 에서 validation 어노테이션 사용할 수 있게 해줌
             // @RequestBody : JSON 요청 데이터 -> 객체 (ScheduleRequest)로 변환
             // scheduleRequest : 변환된 요청 데이터 저장
+            @PathVariable Long userId
+            // 유저 매핑 후 추가
     ) {
-        ScheduleResponse result = scheduleService.createSchedule(scheduleRequest);
+        ScheduleResponse result = scheduleService.createSchedule(scheduleRequest, userId);
         // scheduleService의 createSchedule 메서드 호출 (요청데이터 저장된 scheduleRequest 전달)
         // ScheduleResponse 타입의 변수 result 에 서비스 계층의 반환값(실제 응답 데이터) 저장
 
