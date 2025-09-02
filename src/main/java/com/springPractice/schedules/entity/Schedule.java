@@ -1,6 +1,7 @@
 package com.springPractice.schedules.entity;
 
 import com.springPractice.common.entity.BaseEntity;
+import com.springPractice.users.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,10 +21,12 @@ public class Schedule extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    /*@ManyToOne(fetch = FetchType.LAZY)                // N : 1 -> fetch 속성(조회 시점) = LAZY(지연로딩)
-    @JoinColumn(name = "user_id", nullable = false)   // user_id 라는 외래키 생성
-    private User user;                                // user 엔티티 참조
-    user 생성 후 추가 예정*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    // N : 1 -> fetch 속성(조회 시점) = LAZY(지연로딩)
+    @JoinColumn(name = "user_id", nullable = false)
+    // user_id 라는 외래키 생성
+    private User user;
+    // user 엔티티 참조
 
     // 생성자 정의 //
     public Schedule(String title, String content) {
