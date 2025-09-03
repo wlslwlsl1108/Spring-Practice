@@ -139,12 +139,17 @@ public class ScheduleService {
 
     // 일정 수정 //
     @Transactional
-    public ScheduleResponse updateSchedule(Long scheduleId, ScheduleRequest scheduleRequest) {
+    public ScheduleResponse updateSchedule(Long loginUserId, Long scheduleId, ScheduleRequest scheduleRequest) {
 
         // 1. DB 에서 기존 엔티티 조회
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 일정이 없습니다.")
         );
+
+        // 본인 검증 추가
+        if (!schedule.getUserId().equals(loginUserId)) {
+            throw new IllegalArgumentException("본인이 작성한 일정만 수정할 수 있습니다.");
+        }
 
         // 2. 수정 데이터 저장
         // -> Schedule 엔티티에 메서드 정의

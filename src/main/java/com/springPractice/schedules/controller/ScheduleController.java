@@ -30,7 +30,7 @@ public class ScheduleController {
     // 유저 관계 매핑 후 추가
 
     // 일정 생성 //
-    @PostMapping("users/{userId}/schedules")
+    @PostMapping("users/me/schedules")
     public ResponseEntity<ApiResponse<ScheduleResponse>> createSchedule(
     // 1. ResponseEntity : 상태코드 지정 가능 (안쓰면 200ok 만 응답 가능), 헤더/바디 전체 제어 가능
     // 2. 공통응답 형식 위해 제네릭 타입 사용 -> ApiResponse : 공통 응답 형식
@@ -40,8 +40,9 @@ public class ScheduleController {
             // @RequestBody : JSON 요청 데이터 -> 객체 (ScheduleRequest)로 변환
             // scheduleRequest : 변환된 요청 데이터 저장
             HttpSession session
-            // 유저 매핑 후 추가
+            // 일정 -> 세션의 유저 정보 활용
     ) {
+        // 세션에서 로그인한 사용자 ID 꺼내와 저장
         Long loginUserId = (Long) session.getAttribute(SessionConstant.SESSION_USER);
 
         ScheduleResponse result = scheduleService.createSchedule(scheduleRequest, loginUserId);
@@ -86,9 +87,13 @@ public class ScheduleController {
     @PutMapping("/schedules/{scheduleId}")
     public ResponseEntity<ApiResponse<ScheduleResponse>> updateSchedule(
             @Valid @RequestBody ScheduleRequest scheduleRequest,
-            @PathVariable Long scheduleId
+            @PathVariable Long scheduleId,
+            HttpSession session
     ) {
-        ScheduleResponse result = scheduleService.updateSchedule(scheduleId, scheduleRequest);
+        // 세션에서 로그인한 사용자 ID 꺼내와 저장
+        Long loginUserId = (Long) session.getAttribute(SessionConstant.SESSION_USER);
+
+        ScheduleResponse result = scheduleService.updateSchedule(loginUserId, scheduleId, scheduleRequest);
 
         return ResponseEntity.status(ResponseMessage.SUCCESS_UPDATE.getStatus())
                 .body(ApiResponse.success(ResponseMessage.SUCCESS_UPDATE.getMessage(), result));

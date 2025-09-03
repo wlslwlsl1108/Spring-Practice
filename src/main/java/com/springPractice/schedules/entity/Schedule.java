@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Schedule extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id                                                    // PK 지정
+    @GeneratedValue(strategy = GenerationType.IDENTITY)    // PK값 DB가 자동 생성
     private Long id;
 
     @Column(length = 100, nullable = false)
@@ -28,6 +28,12 @@ public class Schedule extends BaseEntity {
     private User user;
     // user 엔티티 참조
 
+    // getter
+    public Long getUserId() {
+        return user.getId();
+    }
+
+
     // 생성자 정의 //
     public Schedule(String title, String content, User user) {
         this.title = title;
@@ -40,7 +46,6 @@ public class Schedule extends BaseEntity {
         this.title = title;
         this.content = content;
     }
-
 }
 
 /*
