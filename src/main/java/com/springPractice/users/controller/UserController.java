@@ -111,13 +111,18 @@ public class UserController {
                 .body(ApiResponse.success(ResponseMessage.SUCCESS_UPDATE.getMessage(), result));
     }
 
-    // 유저 삭제 //
-    @DeleteMapping("/users/{userId}")
+    // 탈퇴(유저 삭제) //
+    @DeleteMapping("/users/me")
     public ResponseEntity<ApiResponse<UserResponse>> deleteUser(
-            @PathVariable Long userId
+            HttpSession session
     ) {
-        userService.deleteUser(userId);
+        // 1. 세션에서 로그인한 사용자 ID 꺼내와 저장 //
+        Long loginUserId = (Long) session.getAttribute(SessionConstant.SESSION_USER);
 
+        // 2. 사용자 ID 삭제 //
+        userService.deleteUser(loginUserId);
+
+        // 3. 삭제 정보 응답 //
         return ResponseEntity.status(ResponseMessage.SUCCESS_DELETE.getStatus())
                 .body(ApiResponse.success(ResponseMessage.SUCCESS_DELETE.getMessage(), null));
     }
