@@ -12,7 +12,8 @@ import java.io.IOException;
 @Slf4j
 public class LoginFilter implements Filter {
 
-    private static final String[] WHITE_LIST = {"/", "/users/login"};
+    private static final String[] WHITE_LIST = {"/", "/users", "/users/login"};
+    // 유저 생성도 추가
 
     @Override
     public void doFilter(

@@ -1,14 +1,15 @@
 package com.springPractice.users.service;
 
 import com.springPractice.common.config.PasswordEncoder;
-import com.springPractice.users.dto.UserUpdateRequest;
-import com.springPractice.users.dto.UserRequest;
-import com.springPractice.users.dto.UserResponse;
+import com.springPractice.users.dto.*;
 import com.springPractice.users.entity.User;
 import com.springPractice.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -47,6 +48,31 @@ public class UserService {
                 savedUser.getEmail(),
                 savedUser.getCreatedAt(),
                 savedUser.getUpdatedAt()
+        );
+    }
+
+    // 유저 로그인 //
+    @Transactional
+    public UserLoginResponse login(UserLoginRequest userLoginRequest) {
+
+        // 1. 이메일로 유저 조회 (탈퇴 포함)
+        // User 레포지토리에 findByEmail 추가
+        User user = userRepository.findByEmail(userLoginRequest.getEmail()).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 이메일이 없습니다.")
+        );
+
+        // 2. 비밀번호 검증
+        if (!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED, "비밀번호가 올바르지 않습니다."
+            );
+        }
+
+        // 3. 로그인 성공
+        return new UserLoginResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail()
         );
     }
 

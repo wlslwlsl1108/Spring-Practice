@@ -8,7 +8,8 @@ public enum ResponseMessage {
     SUCCESS_CREATE("생성 성공", HttpStatus.CREATED),
     SUCCESS_READ("조회 성공", HttpStatus.OK),
     SUCCESS_UPDATE("수정 성공", HttpStatus.OK),
-    SUCCESS_DELETE("삭제 성공", HttpStatus.OK),;
+    SUCCESS_DELETE("삭제 성공", HttpStatus.OK),
+    SUCCESS_LOGIN("로그인 성공", HttpStatus.OK);
     // 204 (NO_CONTENT)로 지정 시 body가 무시 되어 내용이 아예 출력 안됨
 
     private final String message;

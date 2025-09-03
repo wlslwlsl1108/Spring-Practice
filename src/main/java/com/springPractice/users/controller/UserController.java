@@ -1,11 +1,12 @@
 package com.springPractice.users.controller;
 
 import com.springPractice.common.ResponseMessage;
+import com.springPractice.common.constant.SessionConstant;
 import com.springPractice.common.dto.ApiResponse;
-import com.springPractice.users.dto.UserUpdateRequest;
-import com.springPractice.users.dto.UserRequest;
-import com.springPractice.users.dto.UserResponse;
+import com.springPractice.users.dto.*;
 import com.springPractice.users.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,23 @@ public class UserController {
 
         return ResponseEntity.status(ResponseMessage.SUCCESS_CREATE.getStatus())
                 .body(ApiResponse.success(ResponseMessage.SUCCESS_CREATE.getMessage(), result));
+    }
+
+    // 유저 로그인 //
+    @PostMapping("/users/login")
+    public ResponseEntity<ApiResponse<UserLoginResponse>> login(
+            @Valid @RequestBody UserLoginRequest userLoginRequest,
+            HttpServletRequest request
+    ) {
+        UserLoginResponse result = userService.login(userLoginRequest);
+
+        // Cookie Session 발급 //
+        HttpSession session = request.getSession();
+        session.setAttribute(
+                SessionConstant.SESSION_USER, result.getUserId());
+
+        return ResponseEntity.status(ResponseMessage.SUCCESS_LOGIN.getStatus())
+                .body(ApiResponse.success(ResponseMessage.SUCCESS_LOGIN.getMessage(), result));
     }
 
     // 유저 전체 조회 //
