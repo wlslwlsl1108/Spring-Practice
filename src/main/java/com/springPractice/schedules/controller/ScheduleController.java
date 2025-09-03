@@ -102,9 +102,13 @@ public class ScheduleController {
     // 일정 삭제 //
     @DeleteMapping("/schedules/{scheduleId}")
     public ResponseEntity<ApiResponse<Void>> deleteSchedule(
-            @PathVariable Long scheduleId
+            @PathVariable Long scheduleId,
+            HttpSession session
     ) {
-        scheduleService.deleteSchedule(scheduleId);
+        // 세션에서 로그인한 사용자 ID 꺼내와 저장
+        Long loginUserId = (Long) session.getAttribute(SessionConstant.SESSION_USER);
+
+        scheduleService.deleteSchedule(loginUserId, scheduleId);
 
         return ResponseEntity.status(ResponseMessage.SUCCESS_DELETE.getStatus())
                 .body(ApiResponse.success(ResponseMessage.SUCCESS_DELETE.getMessage(), null));

@@ -169,12 +169,17 @@ public class ScheduleService {
 
     // 일정 삭제 //
     @Transactional
-    public void deleteSchedule(Long scheduleId) {
+    public void deleteSchedule(Long loginUserId, Long scheduleId) {
 
         // 1. DB 에서 기존 엔티티 조회
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalArgumentException()
         );
+
+        // 본인 검증
+        if (!schedule.getUserId().equals(loginUserId)) {
+            throw new IllegalArgumentException("본인이 작성한 일정만 삭제할 수 있습니다.");
+        }
 
         // 2. 삭제
         scheduleRepository.delete(schedule);
