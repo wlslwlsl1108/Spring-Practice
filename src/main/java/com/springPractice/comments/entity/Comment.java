@@ -16,7 +16,7 @@ public class Comment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(length = 255, nullable = false)
     private String comment_text;
 
     @ManyToOne(fetch = FetchType.LAZY)
