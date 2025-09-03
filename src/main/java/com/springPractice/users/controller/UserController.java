@@ -77,7 +77,7 @@ public class UserController {
                 .body(ApiResponse.success(ResponseMessage.SUCCESS_READ.getMessage(), result));
     }
 
-    // 유저 단건 조회 //
+    // 내 정보 조회 //
     // "/users/{userId}"  ->  "/users/me" 변경
     @GetMapping("/users/me")
     public ResponseEntity<ApiResponse<UserResponse>> getMyInfo(HttpSession session) {
@@ -93,14 +93,20 @@ public class UserController {
                 .body(ApiResponse.success(ResponseMessage.SUCCESS_READ.getMessage(), result));
     }
 
-    // 유저 수정 //
-    @PutMapping("/users/{userId}")
+    // 내 정보 수정 //
+    // "/users/{userId}"  ->  "/users/me" 변경
+    @PutMapping("/users/me")
     public ResponseEntity<ApiResponse<UserResponse>> updateUser(
             @Valid @RequestBody UserUpdateRequest userUpdateRequest,
-            @PathVariable Long userId
+            HttpSession session
     ) {
-        UserResponse result = userService.updateUser(userId, userUpdateRequest);
+        // 1. 세션에서 로그인한 사용자 ID 꺼내와 저장 //
+        Long loginUserId = (Long) session.getAttribute(SessionConstant.SESSION_USER);
 
+        // 2. 사용자 ID로 DB 에서 정보 조회 //
+        UserResponse result = userService.updateUser(loginUserId, userUpdateRequest);
+
+        // 3. 조회된 사용자 정보 응답 //
         return ResponseEntity.status(ResponseMessage.SUCCESS_UPDATE.getStatus())
                 .body(ApiResponse.success(ResponseMessage.SUCCESS_UPDATE.getMessage(), result));
     }
