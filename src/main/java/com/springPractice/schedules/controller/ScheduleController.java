@@ -1,11 +1,13 @@
 package com.springPractice.schedules.controller;
 
 import com.springPractice.common.ResponseMessage;
+import com.springPractice.common.constant.SessionConstant;
 import com.springPractice.common.dto.ApiResponse;
 import com.springPractice.schedules.dto.ScheduleRequest;
 import com.springPractice.schedules.dto.ScheduleResponse;
 import com.springPractice.schedules.service.ScheduleService;
 import com.springPractice.users.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,10 +39,12 @@ public class ScheduleController {
             // @Valid : dto 에서 validation 어노테이션 사용할 수 있게 해줌
             // @RequestBody : JSON 요청 데이터 -> 객체 (ScheduleRequest)로 변환
             // scheduleRequest : 변환된 요청 데이터 저장
-            @PathVariable Long userId
+            HttpSession session
             // 유저 매핑 후 추가
     ) {
-        ScheduleResponse result = scheduleService.createSchedule(scheduleRequest, userId);
+        Long loginUserId = (Long) session.getAttribute(SessionConstant.SESSION_USER);
+
+        ScheduleResponse result = scheduleService.createSchedule(scheduleRequest, loginUserId);
         // scheduleService의 createSchedule 메서드 호출 (요청데이터 저장된 scheduleRequest 전달)
         // ScheduleResponse 타입의 변수 result 에 서비스 계층의 반환값(실제 응답 데이터) 저장
 
